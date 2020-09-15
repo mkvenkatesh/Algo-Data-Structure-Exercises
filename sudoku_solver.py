@@ -17,12 +17,11 @@ Algorithm:
 
 """
 
-def sudoku_solver(input):
+def build_helper_arrays():
     nums_rows = []
     nums_cols = []
     nums_3x3 = []
 
-    # get numbers in each row/col/local 3x3 block
     for i in range(len(input)):                            
         nums_rows.append([])
         nums_cols.append([])   
@@ -46,16 +45,24 @@ def sudoku_solver(input):
             if num in temp_col_arr:
                 nums_cols[i].append(num)
 
+    return nums_rows, nums_cols, nums_3x3
+
+def sudoku_solver(input):
+
+    # get numbers in each row/col/local 3x3 block
+    nums_rows, nums_cols, nums_3x3 = build_helper_arrays()
+
     # Find the candidates for each open position on the board
     empty_candidates_count = 0
     while empty_candidates_count != 9:
-        candidates = []
+        candidates_nums = []
         empty_candidates_count = 0
+        # loop through each 3x3 grid
         for idx_3x3 in range(len(nums_3x3)):
-            candidates.append({})
+            candidates_nums.append({})
             for num in range(1, 10):
-                # find the best position(s) for a given num that's not in the local
-                # 3x3 grid
+                # find the best position(s) for a given num with the following
+                # constraints
                 # a) make sure num is not in 3x3 grid
                 # b) in the 3x3 grid, eliminate rows and cols that has the num
                 # in the corresponding row or column and use this information to
@@ -64,15 +71,13 @@ def sudoku_solver(input):
                 # nums with same candidates, the occurrence of that candidate
                 # can be eliminated from the row, column or the grid in other
                 # cells.
-                # d) if a num in a 3x3 grid only has candidates in adjacent
-                # cells of rows/cols (two or three), all other occurrence of
-                # that num in that row or column can be eliminated
-                # e) if a num appears only in 2 or 3 adjacent cells in a row or
+                # d) if a num appears only in 2 or 3 adjacent cells in a row or
                 # column, that num can be eliminated from other cells in the
                 # local 3x3 grid
                 if num not in nums_3x3[idx_3x3]: 
-                    if num not in candidates[idx_3x3]:               
-                        candidates[idx_3x3][num] = []
+                    if num not in candidates_nums[idx_3x3]:               
+                        candidates_nums[idx_3x3][num] = []
+                    
                     # gather row candidate for local grid for the given num
                     row_start_3x3 = 3 * (idx_3x3 // 3)                
                     row_3x3_cds = []
@@ -91,13 +96,13 @@ def sudoku_solver(input):
                     for i in row_3x3_cds:
                         for j in col_3x3_cds:
                             if input[i][j] == 0:                                
-                                candidates[idx_3x3][num].append((i, j))                    
+                                candidates_nums[idx_3x3][num].append((i, j))                    
                     
                     # if there's only one candidate for num, set that num on that
                     # candidate position
-                    if len(candidates[idx_3x3][num]) == 1:
-                        cell_row = candidates[idx_3x3][num][0][0]
-                        cell_col = candidates[idx_3x3][num][0][1]
+                    if len(candidates_nums[idx_3x3][num]) == 1:
+                        cell_row = candidates_nums[idx_3x3][num][0][0]
+                        cell_col = candidates_nums[idx_3x3][num][0][1]
                         input[cell_row][cell_col] = num
                         
                         # make sure to add num to the three arrays we maintain -
@@ -107,12 +112,12 @@ def sudoku_solver(input):
                         nums_3x3[idx_3x3].append(num)
 
                         # remove references to candidate positions
-                        del candidates[idx_3x3][num]
-                        for key in candidates[idx_3x3]:
-                            if (cell_row, cell_col) in candidates[idx_3x3][key]:
-                                candidates[idx_3x3][key].remove((cell_row, cell_col))
+                        del candidates_nums[idx_3x3][num]
+                        for key in candidates_nums[idx_3x3]:
+                            if (cell_row, cell_col) in candidates_nums[idx_3x3][key]:
+                                candidates_nums[idx_3x3][key].remove((cell_row, cell_col))
 
-            if candidates[idx_3x3] == {}:
+            if candidates_nums[idx_3x3] == {}:
                 empty_candidates_count += 1
 
 input = [
