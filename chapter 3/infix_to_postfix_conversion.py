@@ -48,6 +48,7 @@ from stack import Stack
 
 def infix_to_postfix(infix_expr):
     op_precedence = {
+        "^": 0,
         "*": 1,
         "/": 1,
         "+": 2,
@@ -66,7 +67,7 @@ def infix_to_postfix(infix_expr):
         elif char in op_precedence:        
             # check for any equal or higher precedence operators in stack and
             # pop them to output
-            while (not s.is_empty) and (s.peek() in op_precedence) and (op_precedence[char] <= op_precedence[s.peek]):
+            while (not s.is_empty()) and (s.peek() in op_precedence) and (op_precedence[char] >= op_precedence[s.peek()]):
                 postfix_output += s.pop()                        
             # if lower precedence, push operator into stack
             s.push(char)
@@ -102,5 +103,8 @@ print("Infix expression", expr, "in postfix is", infix_to_postfix(expr))
 expr = "( A + B ) * ( C + D )"
 print("Infix expression", expr, "in postfix is", infix_to_postfix(expr))
 
-expr = "( A + B ) * ( C + D )"
+expr = "a + b * c/(d - e)"
+print("Infix expression", expr, "in postfix is", infix_to_postfix(expr))
+
+expr = "5 * 3^(4-2)"
 print("Infix expression", expr, "in postfix is", infix_to_postfix(expr))
