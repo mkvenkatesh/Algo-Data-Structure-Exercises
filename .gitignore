@@ -1,5 +1,3 @@
-.vscode/.ropeproject/config.py
-.vscode/.ropeproject/objectdb
+.vscode/
 .DS_Store
-chapter 3/__pycache__/stack.cpython-37.pyc
-chapter 4/__pycache__/queue.cpython-37.pyc
+*/__pycache__/
