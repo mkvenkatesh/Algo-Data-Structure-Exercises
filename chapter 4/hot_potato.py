@@ -16,8 +16,8 @@ will begin. This process will continue until only one name remains (the size of
 the queue is 1).
 '''
 
-from queue import Queue
 from random import randrange
+from queues import Queue
 
 def hot_potato(q, num):
     q = Queue()
