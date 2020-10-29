@@ -56,6 +56,7 @@ class List:
         '''List() creates a new list that is empty. It needs no parameters and
             returns an empty list.'''
         self.head = None
+        self.tail = None
 
     def add(self, item):
         '''add(item) adds a new item to the list. It needs the item and returns
@@ -63,7 +64,10 @@ class List:
         print("Add to list:", item)
         new_node = Node(item)
         new_node.set_next(self.head)
+        if not self.head:
+            self.tail = new_node        
         self.head = new_node
+
 
     def remove(self, item):
         '''remove(item) removes the item from the list. It needs the item and
@@ -76,9 +80,13 @@ class List:
             if ptr.get_data() == item:
                 if prev_ptr == None:
                     self.head = ptr.get_next()
+                    if not ptr.get_next():
+                        self.tail = None
                 else:
                     prev_ptr.set_next(ptr.get_next())
-            
+                    if not ptr.get_next():
+                        self.tail = prev_ptr
+
             prev_ptr = ptr
             ptr = ptr.get_next()
 
@@ -116,13 +124,17 @@ class List:
         '''append(item) adds a new item to the end of the list making it the
             last item in the collection. It needs the item and returns nothing.
             Assume the item is not already in the list''' 
-        print("Append to list:", item)       
-        ptr = self.head
-        while True:
-            if ptr.get_next() == None:
-                ptr.set_next(Node(item))
-                break
-            ptr = ptr.get_next()
+        print("Append to list:", item)
+        ptr = self.tail
+        ptr.set_next(Node(item))
+        self.tail = ptr.get_next()        
+        # ptr = self.head
+        # while True:
+        #     if ptr.get_next() == None:
+        #         ptr.set_next(Node(item))
+        #         self.tail = ptr.get_next()
+        #         break
+        #     ptr = ptr.get_next()
 
     def index(self, item):
         '''index(item) returns the position of item in the list. It needs the
@@ -171,6 +183,7 @@ class List:
                 ptr = ptr.next
             ret_data = ptr.data
             prev_ptr.set_next(None)
+            self.tail = prev_ptr
             return ret_data
         else:
             '''pop(pos) removes and returns the item at position pos. It needs the
@@ -184,6 +197,9 @@ class List:
                         self.head = ptr.get_next()                
                     else:
                         prev_ptr.set_next(ptr.get_next())
+                    
+                    if pos == self.size() - 1:
+                        self.tail = prev_ptr
                     ret_data = ptr.get_data()
                     return ret_data
 
