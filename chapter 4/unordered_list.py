@@ -51,7 +51,7 @@ class Node:
         self.next = node
 
 
-class List:
+class UnorderedList:
     def __init__(self):
         '''List() creates a new list that is empty. It needs no parameters and
             returns an empty list.'''
@@ -216,7 +216,7 @@ class List:
         return retstr
 
 if __name__ == "__main__":    
-    l = List()
+    l = UnorderedList()
     l.add(10)
     l.add(20)
     l.add(30)
