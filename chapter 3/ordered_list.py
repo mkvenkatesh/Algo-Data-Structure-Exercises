@@ -106,6 +106,8 @@ class OrderedList:
         while ptr:
             if ptr.get_data() == item:
                 return True
+            if ptr.get_data() > item:
+                break
             ptr = ptr.get_next()
         
         return False
