@@ -19,14 +19,15 @@ def is_balanced_paren(inputstr):
     if s.is_empty():
         return True
 
-p = "((()()())(()))"
-print(p, "is balanced: ", is_balanced_paren(p))
+if __name__ == "__main__":    
+    p = "((()()())(()))"
+    print(p, "is balanced: ", is_balanced_paren(p))
 
-p = "((()()()(()))"
-print(p, "is balanced: ", is_balanced_paren(p))
+    p = "((()()()(()))"
+    print(p, "is balanced: ", is_balanced_paren(p))
 
-p = ")))"
-print(p, "is balanced: ", is_balanced_paren(p))
+    p = ")))"
+    print(p, "is balanced: ", is_balanced_paren(p))
 
-p = "()()()()()()()()()"
-print(p, "is balanced: ", is_balanced_paren(p))
+    p = "()()()()()()()()()"
+    print(p, "is balanced: ", is_balanced_paren(p))
