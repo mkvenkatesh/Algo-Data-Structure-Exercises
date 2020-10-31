@@ -45,66 +45,99 @@ output list.
 '''
 
 from stack import Stack
+from check_balanced_parenthesis import is_balanced_paren
+
+def validate_input(infix_expr):
+    ops = ("*", "/", "+", "-", "^")
+    if not infix_expr \
+        or infix_expr.strip() == "" \
+            or not is_balanced_paren(infix_expr) \
+                or infix_expr[-1] in ops:
+        return False
+    
+    idx = 0
+    for char in infix_expr:        
+        if char.isalpha() \
+            or char.isdecimal() \
+                or char in ops \
+                    or char in (" ", "(", ")"):
+            # an operatory should not come before a closing parenthesis in infix expression
+            if char == ")" and infix_expr[idx - 1] in ops:
+                return False
+            else:
+                idx += 1
+                continue
+        else:
+            return False
+        
+    return True
 
 def infix_to_postfix(infix_expr):
-    op_precedence = {
-        "^": 0,
-        "*": 1,
-        "/": 1,
-        "+": 2,
-        "-": 2
-    }
-    postfix_output = ""
-    s = Stack()
+    if (validate_input(infix_expr)):
+        op_precedence = {
+            "^": 0,
+            "*": 1,
+            "/": 1,
+            "+": 2,
+            "-": 2
+        }
+        postfix_output = ""
+        s = Stack()
 
-    for char in infix_expr:
-        # skip any spaces in input expression
-        if char == " ":
-            continue
-        # if you encounter a left parenthesis, push it to the stack
-        elif char == "(":
-            s.push(char)
-        elif char in op_precedence:        
-            # check for any equal or higher precedence operators in stack and
-            # pop them to output
-            while (not s.is_empty()) and (s.peek() in op_precedence) and (op_precedence[char] >= op_precedence[s.peek()]):
-                postfix_output += s.pop()                        
-            # if lower precedence, push operator into stack
-            s.push(char)
-        elif char == ")":
-            # pop all the operators in the stack to the output until you
-            # encounter a left parenthesis
-            while s.peek() != "(":
-                postfix_output += s.pop()
-            # get rid off the "(" in the stack
-            s.pop()
-        else:
-            postfix_output += char
+        for char in infix_expr:
+            # skip any spaces in input expression
+            if char == " ":
+                continue
+            # if you encounter a left parenthesis, push it to the stack
+            elif char == "(":
+                s.push(char)
+            elif char in op_precedence:        
+                # check for any equal or higher precedence operators in stack and
+                # pop them to output
+                while (not s.is_empty()) and (s.peek() in op_precedence) and (op_precedence[char] >= op_precedence[s.peek()]):
+                    postfix_output += s.pop()                        
+                # if lower precedence, push operator into stack
+                s.push(char)
+            elif char == ")":
+                # pop all the operators in the stack to the output until you
+                # encounter a left parenthesis
+                while s.peek() != "(":
+                    postfix_output += s.pop()
+                # get rid off the "(" in the stack
+                s.pop()
+            else:
+                postfix_output += char
 
-    # if there's anything left in the stack, pop it out to output
-    while not s.is_empty():
-        postfix_output += s.pop()
+        # if there's anything left in the stack, pop it out to output
+        while not s.is_empty():
+            postfix_output += s.pop()
 
-    return postfix_output
+        return postfix_output
+    else:
+        raise ValueError(f"Infix expression '{infix_expr}' failed validation")
 
-# driver code
-expr = "a+b*c"
-print("Infix expression", expr, "in postfix is", infix_to_postfix(expr))
+if __name__ == "__main__":        
+    # driver code
+    expr = "a+b*c"
+    print("Infix expression", expr, "in postfix is", infix_to_postfix(expr))
 
-expr = "(a+b)*c"
-print("Infix expression", expr, "in postfix is", infix_to_postfix(expr))
+    expr = "(a+b)*c"
+    print("Infix expression", expr, "in postfix is", infix_to_postfix(expr))
 
-expr = "A * B + C * D"
-print("Infix expression", expr, "in postfix is", infix_to_postfix(expr))
+    expr = "A * B + C * D"
+    print("Infix expression", expr, "in postfix is", infix_to_postfix(expr))
 
-expr = "(A+B)*C-(D-E)*(F+G)"
-print("Infix expression", expr, "in postfix is", infix_to_postfix(expr))
+    expr = "(A+B)*C-(D-E)*(F+G)"
+    print("Infix expression", expr, "in postfix is", infix_to_postfix(expr))
 
-expr = "( A + B ) * ( C + D )"
-print("Infix expression", expr, "in postfix is", infix_to_postfix(expr))
+    expr = "( A + B ) * ( C + D )"
+    print("Infix expression", expr, "in postfix is", infix_to_postfix(expr))
 
-expr = "a + b * c/(d - e)"
-print("Infix expression", expr, "in postfix is", infix_to_postfix(expr))
+    expr = "a + b * c/(d - e)"
+    print("Infix expression", expr, "in postfix is", infix_to_postfix(expr))
 
-expr = "5 * 3^(4-2)"
-print("Infix expression", expr, "in postfix is", infix_to_postfix(expr))
+    expr = "5 * 3^(4-2)"
+    print("Infix expression", expr, "in postfix is", infix_to_postfix(expr))
+
+    expr = "a*()()"
+    print("Infix expression", expr, "in postfix is", infix_to_postfix(expr))
