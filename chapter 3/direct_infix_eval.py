@@ -63,7 +63,6 @@ def direct_infix_eval(infix_expr):
                 # check for any equal or higher precedence operators in stack and
                 # pop them to output
                 while (not operator_stack.is_empty()) and (operator_stack.peek() in op_precedence) and (op_precedence[char] >= op_precedence[operator_stack.peek()]):
-                    # postfix_output += operator_stack.pop()
                     eval_postfix(operand_stack, operator_stack)                       
                 # if lower precedence, push operator into stack
                 operator_stack.push(char)
@@ -71,17 +70,14 @@ def direct_infix_eval(infix_expr):
                 # pop all the operators in the stack to the output until you
                 # encounter a left parenthesis
                 while operator_stack.peek() != "(":
-                    # postfix_output += operator_stack.pop()
                     eval_postfix(operand_stack, operator_stack)
                 # get rid off the "(" in the stack
                 operator_stack.pop()
             else:
-                # postfix_output += char
                 operand_stack.push(char)
 
         # if there's anything left in the stack, pop it out to output
         while not operator_stack.is_empty():
-            # postfix_output += operator_stack.pop()
             eval_postfix(operand_stack, operator_stack)
 
         return operand_stack.pop()
