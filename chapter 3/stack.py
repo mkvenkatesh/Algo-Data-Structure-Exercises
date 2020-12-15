@@ -34,6 +34,12 @@ class Stack:
     def size(self):
         return len(self.s)
 
+    def __str__(self):
+        retstr = ""
+        for num in self.s:
+            retstr += str(num) + " "
+        return retstr
+
 if __name__ == "__main__":
     print("Creating new stack.")
     s = Stack()
