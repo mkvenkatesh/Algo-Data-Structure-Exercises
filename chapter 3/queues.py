@@ -36,6 +36,13 @@ class Queue:
     def is_empty(self):
         return self.q == []
 
+    def __str__(self):
+        retstr = ""
+        for num in self.q:
+            retstr += str(num) + " "
+
+        return retstr
+
 if __name__ == "__main__":
     q = Queue()
     
